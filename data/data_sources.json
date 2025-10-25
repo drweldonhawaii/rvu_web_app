@@ -1,0 +1,7 @@
+{
+  "datasets": {
+    "rvus": { "file_path": "data/rvus.csv" },
+    "cci": { "file_path": "data/cci.csv" }
+  },
+  "app_settings": { "ignore_expired_edits": true }
+}

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title>Results</title></head>
+<body>
+<h2>RVU Results</h2>
+{% for r in results %}
+<p><b>{{ r.codes }}</b> — Total Work RVUs: {{ r.total_rvu }}</p>
+{% endfor %}
+<a href="/">Back</a>
+</body>
+</html>
