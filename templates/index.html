@@ -1,11 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head><title>RVU Optimizer</title></head>
+<head>
+  <meta charset="utf-8" />
+  <title>RVU Calculator</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Arial; margin: 2rem; }
+    textarea { width: 100%; height: 6rem; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: .5rem; text-align: left; }
+    .muted { color: #666; }
+  </style>
+</head>
 <body>
-<h2>Enter CPT Codes (comma separated):</h2>
-<form method="POST">
-<input type="text" name="codes" style="width:300px">
-<button type="submit">Calculate RVUs</button>
-</form>
+  <h1>RVU Calculator</h1>
+
+  {% if not has_data %}
+    <p class="muted">Heads-up: <code>data/rvus.csv</code> was not found or is empty. Totals will be 0.0 until you upload RVUs on the Update page.</p>
+  {% endif %}
+
+  <form method="POST" action="/">
+    <label for="codes">Enter codes (comma-separated):</label><br/>
+    <textarea name="codes" id="codes" placeholder="e.g. 23412, 29827, 29826">{{ input_codes }}</textarea><br/>
+    <button type="submit">Calculate RVUs</button>
+  </form>
+
+  {% if results and results|length > 0 %}
+    <h2>Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Codes</th>
+          <th>Total RVUs</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in results %}
+          <tr>
+            <td>{{ row.codes|join(", ") }}</td>
+            <td>{{ "%.2f"|format(row.total) }}</td>
+            <td>
+              {% if row.notes and row.notes|length > 0 %}
+                {{ row.notes|join("; ") }}
+              {% else %}
+                <span class="muted">—</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% elif request.method == 'POST' %}
+    <p>No valid combinations found. (Check your codes or CCI table.)</p>
+  {% endif %}
 </body>
 </html>
